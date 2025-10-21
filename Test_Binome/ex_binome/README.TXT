@@ -1,0 +1,1 @@
+L'interface est sur un notebook python "main.ipynb" et l'application doit être exécutée complètement, à la fin le formulaire apparaîtra, remplissez le formulaire et envoyez, il affichera la valeur du groupe auquel appartient l'ensemble de données

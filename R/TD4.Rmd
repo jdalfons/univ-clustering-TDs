@@ -1,0 +1,147 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+```{r}
+library('readxl')
+```
+
+```{r}
+data <- read_excel('covertype_100k.xlsx')
+
+data <- data[2: ncol(data)]
+```
+
+```{r}
+summary(data)
+```
+
+```{r}
+str(data)
+```
+
+```{r}
+data_scaled <- scale(data)
+```
+
+```{r}
+summary(data_scaled)
+```
+
+```{r}
+attributes(data_scaled)
+```
+
+```{r}
+attr(data_scaled,"scaled:center")
+
+```
+
+```{r}
+
+attr(data_scaled,"scaled:scale")
+```
+
+```{r}
+nb_groups <- 10
+km <- kmeans(data_scaled, centers=nb_groups)
+
+```
+
+```{r}
+km$totss
+```
+
+Same to this one
+
+```{r}
+(nrow(data_scaled)-1)*1*ncol(data_scaled)
+```
+
+```{r}
+print(cbind(row.names(data_scaled), km$cluster))
+```
+
+```{r}
+ratioBT <- km$betweenss / km$totss
+print(ratioBT)
+```
+
+```{r}
+print(km$size)
+sum(km$size)
+```
+
+show first 10 items in cluster
+
+```{r}
+head(km$cluster, 10)
+```
+
+20. Compare this with info gived by `km$size`
+
+```{r}
+table(km$cluster)
+```
+
+21. Centerd of the clustering
+
+```{r}
+km$centers
+```
+
+```{r}
+dc <- dist(km$centers)
+print(dc)
+```
+
+```{r}
+cah <- hclust(dc, method="ward.D2", members = km$size )
+plot(cah, hang=-1)
+```
+
+```{r}
+groups <- cutree(cah, k=4)
+print(groups)
+```
+
+```{r}
+groups <- factor(groups, labels = c("A","B","C", "D"))
+print(groups)
+```
+
+```{r}
+table_c <- t(sapply(names(groups), function(g){v <- rep(0, 4); v[groups[g]] = 1; return(v)})) 
+table_c
+```
+
+```{r}
+names(groups)
+```
+
+```{r}
+print(table(groups))
+
+```
+
+```{r}
+final <- as.character(groups[km$cluster])
+print(final)
+```
+
+```{r}
+clust_final = groups[km$cluster]
+table(clust_final)
+```
+
+```{r}
+sum(table(clust_final))
+```
+
+```{r}
+```
